@@ -1,0 +1,210 @@
+Here’s a structured approach to implementing your RESTful API using Node.js and Express.js:
+
+⸻
+
+1. Set Up the Project
+	1.	Create a directory for your project:
+
+mkdir lab5-rest-api
+cd lab5-rest-api
+
+
+	2.	Initialize a new Node.js project:
+
+npm init -y
+
+
+	3.	Install Express.js:
+
+npm install express
+
+
+	4.	Create the index.js file:
+
+touch index.js
+
+
+
+⸻
+
+2. Implement the API
+
+index.js
+
+const express = require('express');
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json()); // Middleware to parse JSON requests
+
+// In-memory data storage
+let books = [];
+
+// Student info endpoint
+app.get('/whoami', (req, res) => {
+    res.json({ studentNumber: "12345678" });
+});
+
+// Get all books
+app.get('/books', (req, res) => {
+    res.json(books);
+});
+
+// Get a specific book by ID
+app.get('/books/:id', (req, res) => {
+    const book = books.find(b => b.id === req.params.id);
+    if (!book) return res.status(404).json({ error: "Book not found" });
+    res.json(book);
+});
+
+// Add a new book
+app.post('/books', (req, res) => {
+    const { id, title, details } = req.body;
+    
+    if (!id || !title || !Array.isArray(details)) {
+        return res.status(400).json({ error: "Missing required book details" });
+    }
+    
+    const newBook = { id, title, details };
+    books.push(newBook);
+    
+    res.status(201).json(newBook);
+});
+
+// Update a book by ID
+app.put('/books/:id', (req, res) => {
+    const { title, details } = req.body;
+    const book = books.find(b => b.id === req.params.id);
+
+    if (!book) return res.status(404).json({ error: "Book not found" });
+
+    if (title) book.title = title;
+    if (details) book.details = details;
+
+    res.json(book);
+});
+
+// Delete a book by ID
+app.delete('/books/:id', (req, res) => {
+    const bookIndex = books.findIndex(b => b.id === req.params.id);
+    if (bookIndex === -1) return res.status(404).json({ error: "Book not found" });
+
+    books.splice(bookIndex, 1);
+    res.status(204).send();
+});
+
+// Add a detail to a book
+app.post('/books/:id/details', (req, res) => {
+    const { id, author, genre, publicationYear } = req.body;
+    const book = books.find(b => b.id === req.params.id);
+
+    if (!book) return res.status(404).json({ error: "Book not found" });
+
+    if (!id || !author || !genre || !publicationYear) {
+        return res.status(400).json({ error: "Missing required detail fields" });
+    }
+
+    book.details.push({ id, author, genre, publicationYear });
+    res.status(201).json(book);
+});
+
+// Delete a detail from a book
+app.delete('/books/:id/details/:detailId', (req, res) => {
+    const book = books.find(b => b.id === req.params.id);
+    if (!book) return res.status(404).json({ error: "Book not found" });
+
+    const detailIndex = book.details.findIndex(d => d.id === req.params.detailId);
+    if (detailIndex === -1) return res.status(404).json({ error: "Detail not found" });
+
+    book.details.splice(detailIndex, 1);
+    res.status(204).send();
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+
+
+⸻
+
+3. Testing the API
+
+Use Postman or cURL to test each endpoint.
+
+✅ Check Student Info
+
+curl -X GET http://localhost:3000/whoami
+
+✅ Add a New Book
+
+curl -X POST http://localhost:3000/books -H "Content-Type: application/json" -d '{
+  "id": "1",
+  "title": "1984",
+  "details": [
+    { "id": "1", "author": "George Orwell", "genre": "Dystopian", "publicationYear": 1949 }
+  ]
+}'
+
+✅ Get All Books
+
+curl -X GET http://localhost:3000/books
+
+✅ Get a Book by ID
+
+curl -X GET http://localhost:3000/books/1
+
+✅ Update a Book
+
+curl -X PUT http://localhost:3000/books/1 -H "Content-Type: application/json" -d '{
+  "title": "1984 - Updated Edition"
+}'
+
+✅ Delete a Book
+
+curl -X DELETE http://localhost:3000/books/1
+
+✅ Add a Detail to a Book
+
+curl -X POST http://localhost:3000/books/1/details -H "Content-Type: application/json" -d '{
+  "id": "2",
+  "author": "George Orwell",
+  "genre": "Political Fiction",
+  "publicationYear": 1949
+}'
+
+✅ Delete a Detail from a Book
+
+curl -X DELETE http://localhost:3000/books/1/details/2
+
+
+
+⸻
+
+4. Submitting Your Work
+	1.	Upload to GitHub
+
+git init
+git add .
+git commit -m "Lab 5 - RESTful API"
+git branch -M main
+git remote add origin <your-github-repo-url>
+git push -u origin main
+
+
+	2.	Submit on Moodle
+	•	Zip your folder as <student_id>_lab5.zip.
+	•	Upload it to Moodle as instructed.
+
+⸻
+
+Bonus: Additional Improvements
+	•	Use UUIDs for book and detail IDs (npm install uuid).
+	•	Logging Middleware to track requests.
+	•	Swagger API Docs for documentation.
+
+⸻
+
+This should be everything you need! Let me know if you need any clarifications.
