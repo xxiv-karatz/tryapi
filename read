@@ -1,0 +1,108 @@
+
+Lab 5: RESTful API for Managing Books
+Objective
+
+The objective of this lab is to assess your ability to create a RESTful API using Node.js and Express.js. You will develop an API to manage a collection of books and their details, ensuring it follows best practices in RESTful API design.
+Instructions
+1. Setup
+
+    Create a new directory for this lab assignment.
+    Inside the directory, create the following file:
+        index.js (this will be your main API file).
+    Your API must listen on PORT 3000.
+
+2. API Requirements
+
+    Implement your API using Node.js and Express.js.
+    Store book data in-memory (no database required and must start as empty array).
+    Define and implement API routes according to RESTful conventions.
+    Ensure correct use of HTTP methods (GET, POST, PUT, DELETE).
+    Use JSON format for request and response bodies.
+    Implement error handling and return appropriate HTTP status codes.
+
+3. API Endpoints
+HTTP Method 	Endpoint 	Description
+GET 	/whoami 	Returns an object with your student number.
+GET 	/books 	Returns a list of all books.
+GET 	/books/:id 	Returns details of a specific book. If the book does not exist, return a 404 Not Found.
+POST 	/books 	Adds a new book to the collection. If the request is invalid, return a 400 Bad Request.
+PUT 	/books/:id 	Updates an existing book's information.
+DELETE 	/books/:id 	Deletes a book from the collection.
+POST 	/books/:id/details 	Adds a detail (e.g., author, genre, year) to a book.
+DELETE 	/books/:id/details/:detailId 	Removes a detail from a book.
+4. Data Structure
+
+Each book should have the following structure:
+
+{
+  "id": "1",
+  "title": "To Kill a Mockingbird",
+  "details": [
+    {
+      "id": "1",
+      "author": "Harper Lee",
+      "genre": "Fiction",
+      "publicationYear": 1960
+    }
+  ]
+}
+
+    Each book can have multiple details stored in an array.
+    A detail includes:
+        id: Unique identifier for the detail.
+        author: Author of the book.
+        genre: Genre of the book.
+        publicationYear: Year the book was published.
+
+ 
+
+5. Error Handling Requirements
+
+ 
+
+    If a book does not exist when fetching or updating, return a 404 Not Found.
+    If a POST request has missing or invalid fields, return a 400 Bad Request.
+
+6. Example API Responses
+
+Valid GET /whoami Response
+{
+  "studentNumber": "12345678"
+}
+
+Valid POST /books Request 
+{
+  "id": "1",
+  "title": "1984",
+  "details": [
+    {
+      "id": "1",
+      "author": "George Orwell",
+      "genre": "Dystopian",
+      "publicationYear": 1949
+    }
+  ]
+}
+
+Invalid POST /books Request (Missing Fields)
+{
+  "title": "1984"
+}
+Response (Status: 400 Bad Request):
+{
+  "error": "Missing required book details"
+}
+
+7. Submission
+
+    Submit your entire project directory as a folder named <student_id>_lab5 to moodle.
+    Ensure your index.js file is inside the folder.
+    Push your changes to a Github Repo
+    Do not use any external database—the data should be stored in memory.
+    Your API must run on port 3000, or it will not be tested.
+
+💡 Tips for Success (from ChatGPT) That I agree with
+
+✔️ Use Postman or cURL to test each endpoint before submitting.
+✔️ Log errors clearly so you can debug quickly.
+✔️ Follow the data structure exactly as described.
